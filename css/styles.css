@@ -1,7 +1,13 @@
-body {
-//  padding-top: 50px;
-}
 .main {
-  padding: 50px 40px;
+  padding: 20px 40px;
   background-color: #463265;
+  position: fixed;
+  top:0;
+  width: 100%;
+}
+
+.notes{
+	margin-top: 180px;
+	position: relative;
+	z-index: -1;
 }

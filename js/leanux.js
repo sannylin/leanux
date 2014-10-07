@@ -8,6 +8,24 @@ var j = jQuery.noConflict();
   var noteList = $('#savednotes');
   var savenote = $('#savebutton');
 
+  var category = 'assumptions';
+  var level = 1;
+
+  $('#assumption').click(function(){
+    category = 'assumptions';
+    level = 1;
+  });
+
+  $('#hypothesis').click(function(){
+    category = 'hypotheses';
+    level = 2;
+  });
+
+  $('#observation').click(function(){
+    category = 'observations';
+    level = 3;
+  });
+
   // LISTEN FOR KEYPRESS EVENT
   noteField.keypress(function (e) {
     if (e.keyCode == 13) {
@@ -15,7 +33,8 @@ var j = jQuery.noConflict();
       var note = noteField.val();
 
       //SAVE DATA TO FIREBASE AND EMPTY FIELD
-      fb.push({text:note});
+      var list = fb.push();
+      list.setWithPriority({level:level, type:category, text:note}, level);
       noteField.val('');
     }
   });
@@ -25,7 +44,8 @@ var j = jQuery.noConflict();
       var note = noteField.val();
 
       //SAVE DATA TO FIREBASE AND EMPTY FIELD
-      fb.push({text:note});
+      var list = fb.push();
+      list.setWithPriority({level:level, type:category, text:note}, level);
       noteField.val('');
   });
 
@@ -34,11 +54,14 @@ var j = jQuery.noConflict();
     //GET DATA
     var data = snapshot.val();
     var note = data.text;
+    var category = data.type || "";
+    var order = data.level;
 
     //CREATE ELEMENTS note & SANITIZE TEXT
     var noteElement = $("<li>");
-    noteElement.text(note);
-
+    var categoryElement = $("<strong></strong>")
+    categoryElement.text(category + ': ');
+    noteElement.text(note).prepend(categoryElement);
     //ADD note
-    noteList.append(noteElement)
+    noteList.append(noteElement);
   });
