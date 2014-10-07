@@ -1,0 +1,56 @@
+<html>
+<head>
+  <script src="https://cdn.firebase.com/js/client/1.0.15/firebase.js"></script>
+  <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
+  <link rel="stylesheet" type="text/css" href="/resources/tutorial/css/example.css">
+</head>
+<body>
+
+<!-- CHAT MARKUP -->
+<div class="example-chat l-demo-container">
+  <header>Firebase Chat Demo</header>
+
+  <ul id='savednotes' class="savednotes"></ul>
+
+  <footer>
+    <input type='text' id='noteInput'  placeholder='Type a note...'>
+  </footer>
+</div>
+
+<!-- CHAT JAVACRIPT -->
+<script>
+  // CREATE A REFERENCE TO FIREBASE
+  var fb = new Firebase('https://lean-ux.firebaseio.com');
+
+  // REGISTER DOM ELEMENTS
+  var noteField = $('#noteInput');
+  var noteList = $('#savednotes');
+
+  // LISTEN FOR KEYPRESS EVENT
+  noteField.keypress(function (e) {
+    if (e.keyCode == 13) {
+      //FIELD VALUES
+      var note = noteField.val();
+
+      //SAVE DATA TO FIREBASE AND EMPTY FIELD
+      fb.push({text:note});
+      noteField.val('');
+    }
+  });
+
+  // Add a callback that is triggered for each chat note.
+  fb.on('child_added', function (snapshot) {
+    //GET DATA
+    var data = snapshot.val();
+    var note = data.text;
+
+    //CREATE ELEMENTS note & SANITIZE TEXT
+    var noteElement = $("<li>");
+    noteElement.text(note);
+
+    //ADD note
+    noteList.append(noteElement)
+  });
+</script>
+</body>
+</html>
