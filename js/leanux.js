@@ -1,11 +1,18 @@
 var j = jQuery.noConflict();
+var ELEMENT_POLL_SPEED = 1500;  
 
   // CREATE A REFERENCE TO FIREBASE
   var fb = new Firebase('https://lean-ux.firebaseio.com');
+  var fbAssumptions = new Firebase('https://lean-ux.firebaseio.com/assumptions');
+  var fbHypotheses = new Firebase('https://lean-ux.firebaseio.com/hypotheses');
+  var fbObservations = new Firebase('https://lean-ux.firebaseio.com/observations');
 
   // REGISTER DOM ELEMENTS
   var noteField = $('#noteInput');
   var noteList = $('#savednotes');
+  var assumptionsList = $('#savednotesAssumptions');
+  var hypothesisList = $('#savednotesHypotheses');
+  var observationList = $('#savednotesObservations');
   var savenote = $('#savebutton');
 
   var category = 'assumptions';
@@ -32,10 +39,26 @@ var j = jQuery.noConflict();
       //FIELD VALUES
       var note = noteField.val();
 
-      //SAVE DATA TO FIREBASE AND EMPTY FIELD
-      var list = fb.push();
-      list.setWithPriority({level:level, type:category, text:note}, level);
-      noteField.val('');
+      if (category == 'assumptions'){
+        //SAVE DATA TO FIREBASE AND EMPTY FIELD
+        var list = fbAssumptions.push();
+        list.setWithPriority({level:level, type:category, text:note}, level);
+        noteField.val('');
+      }
+
+      if (category == 'hypotheses'){
+        //SAVE DATA TO FIREBASE AND EMPTY FIELD
+        var list = fbHypotheses.push();
+        list.setWithPriority({level:level, type:category, text:note}, level);
+        noteField.val('');
+      }
+
+      if (category == 'observations'){
+        //SAVE DATA TO FIREBASE AND EMPTY FIELD
+        var list = fbObservations.push();
+        list.setWithPriority({level:level, type:category, text:note}, level);
+        noteField.val('');
+      }
     }
   });
 
@@ -44,13 +67,30 @@ var j = jQuery.noConflict();
       var note = noteField.val();
 
       //SAVE DATA TO FIREBASE AND EMPTY FIELD
-      var list = fb.push();
-      list.setWithPriority({level:level, type:category, text:note}, level);
-      noteField.val('');
+      if (category == 'assumptions'){
+        //SAVE DATA TO FIREBASE AND EMPTY FIELD
+        var list = fbAssumptions.push();
+        list.setWithPriority({level:level, type:category, text:note}, level);
+        noteField.val('');
+      }
+
+      if (category == 'hypotheses'){
+        //SAVE DATA TO FIREBASE AND EMPTY FIELD
+        var list = fbHypotheses.push();
+        list.setWithPriority({level:level, type:category, text:note}, level);
+        noteField.val('');
+      }
+
+      if (category == 'observations'){
+        //SAVE DATA TO FIREBASE AND EMPTY FIELD
+        var list = fbObservations.push();
+        list.setWithPriority({level:level, type:category, text:note}, level);
+        noteField.val('');
+      }
   });
 
   // Add a callback that is triggered for each chat note.
-  fb.on('child_added', function (snapshot) {
+  fbAssumptions.on('child_added', function (snapshot) {
     //GET DATA
     var data = snapshot.val();
     var note = data.text;
@@ -63,5 +103,44 @@ var j = jQuery.noConflict();
     categoryElement.text(category + ': ');
     noteElement.text(note).prepend(categoryElement);
     //ADD note
-    noteList.append(noteElement);
+    assumptionsList.append(noteElement);
+
+    assumptionsList[0].scrollTop = assumptionsList[0].scrollHeight;
   });
+
+  fbHypotheses.on('child_added', function (snapshot) {
+    //GET DATA
+    var data = snapshot.val();
+    var note = data.text;
+    var category = data.type || "";
+    var order = data.level;
+
+    //CREATE ELEMENTS note & SANITIZE TEXT
+    var noteElement = $("<li>");
+    var categoryElement = $("<strong></strong>")
+    categoryElement.text(category + ': ');
+    noteElement.text(note).prepend(categoryElement);
+    //ADD note
+    hypothesisList.append(noteElement);
+
+    hypothesisList[0].scrollTop = hypothesisList[0].scrollHeight;
+  });
+
+  fbObservations.on('child_added', function (snapshot) {
+    //GET DATA
+    var data = snapshot.val();
+    var note = data.text;
+    var category = data.type || "";
+    var order = data.level;
+
+    //CREATE ELEMENTS note & SANITIZE TEXT
+    var noteElement = $("<li>");
+    var categoryElement = $("<strong></strong>")
+    categoryElement.addClass("listitem").text(category + ': ');
+    noteElement.text(note).prepend(categoryElement);
+    //ADD note
+    observationList.append(noteElement);
+
+    observationList[0].scrollTop = observationList[0].scrollHeight;
+  });
+

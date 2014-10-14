@@ -60,9 +60,9 @@
       <div class="container">
         <textarea class="form-control" id="noteInput" rows="3"></textarea>
         
-        <button type="save" class="btn btn-default" id="savebutton" style="margin-top: 10px; float: right;">Save</button>
+        <button type="save" class="btn btn-default" id="savebutton" style="margin-top: 10px; float: right; position: relative;">Save</button>
 
-        <div class="btn-group" style="margin-top: 10px; margin-right: 10px; float: right;">
+        <div class="btn-group" style="margin-top: 10px; margin-right: 10px; float: right; position: relative;">
           <button type="button" class="btn btn-default" id="assumption">A</button>
           <button type="button" class="btn btn-default" id="hypothesis">H</button>
           <button type="button" class="btn btn-default" id="observation">O</button>
@@ -73,7 +73,9 @@
 
     <div class="container notes">
 
-      <ul id="savednotes"></ul>
+      <ul id="savednotesAssumptions" style="z-index:100;"></ul>
+      <ul id="savednotesHypotheses" style="z-index:100;"></ul>
+      <ul id="savednotesObservations" style="z-index:100;"></ul>
 
     </div><!-- /.container -->
 
