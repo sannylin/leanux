@@ -1,5 +1,21 @@
 var j = jQuery.noConflict();
-var ELEMENT_POLL_SPEED = 1500;  
+var ELEMENT_POLL_SPEED = 1500; 
+
+var start = new Date().getTime(),
+time = 0,
+elapsed = 0.0;
+
+function instance(){
+  time += 100;
+
+  elapsed = Math.floor(time / 100) / 10;
+  if(Math.round(elapsed) == elapsed) { elapsed += '.0'; }
+
+  var diff = (new Date().getTime() - start) - time;
+  window.setTimeout(instance, (100 - diff));
+}
+
+window.setTimeout(instance, 100); 
 
   // CREATE A REFERENCE TO FIREBASE
   var fb = new Firebase('https://lean-ux.firebaseio.com');
@@ -31,6 +47,7 @@ var ELEMENT_POLL_SPEED = 1500;
   $('#observation').click(function(){
     category = 'observations';
     level = 3;
+    time = 0;
   });
 
   // LISTEN FOR KEYPRESS EVENT
@@ -56,7 +73,7 @@ var ELEMENT_POLL_SPEED = 1500;
       if (category == 'observations'){
         //SAVE DATA TO FIREBASE AND EMPTY FIELD
         var list = fbObservations.push();
-        list.setWithPriority({level:level, type:category, text:note}, level);
+        list.setWithPriority({level:level, type:category, text:note, time:elapsed}, level);
         noteField.val('');
       }
     }
@@ -84,7 +101,7 @@ var ELEMENT_POLL_SPEED = 1500;
       if (category == 'observations'){
         //SAVE DATA TO FIREBASE AND EMPTY FIELD
         var list = fbObservations.push();
-        list.setWithPriority({level:level, type:category, text:note}, level);
+        list.setWithPriority({level:level, type:category, text:note, time:elapsed}, level);
         noteField.val('');
       }
   });
@@ -132,11 +149,12 @@ var ELEMENT_POLL_SPEED = 1500;
     var note = data.text;
     var category = data.type || "";
     var order = data.level;
+    var timing = data.time;
 
     //CREATE ELEMENTS note & SANITIZE TEXT
     var noteElement = $("<li>");
     var categoryElement = $("<strong></strong>")
-    categoryElement.addClass("listitem").text(category + ': ');
+    categoryElement.addClass("listitem").text(timing + ': ');
     noteElement.text(note).prepend(categoryElement);
     //ADD note
     observationList.append(noteElement);
